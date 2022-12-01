@@ -5,7 +5,7 @@ function start() {
   let aspect = window.innerWidth / window.innerHeight;
   let camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1500);
   let cameraRotation = 0;
-  let cameraRotationSpeed = 0.001;
+  let cameraRotationSpeed = 0.002;
   let cameraAutoRotation = true;
   let orbitControls = new THREE.OrbitControls(camera);
 
@@ -177,64 +177,6 @@ function start() {
     },
   });
 
-  // Marker Proto
-  let markerProto = {
-    latLongToVector3: function latLongToVector3(latitude, longitude, radius, height) {
-      var phi = (latitude)*Math.PI/180;
-      var theta = (longitude-180)*Math.PI/180;
-
-      var x = -(radius+height) * Math.cos(phi) * Math.cos(theta);
-      var y = (radius+height) * Math.sin(phi);
-      var z = (radius+height) * Math.cos(phi) * Math.sin(theta);
-
-      return new THREE.Vector3(x,y,z);
-    },
-    marker: function marker(size, color, vector3Position) {
-      let markerGeometry = new THREE.SphereGeometry(size);
-      let markerMaterial = new THREE.MeshLambertMaterial({
-        color: color
-      });
-      let markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
-      markerMesh.position.copy(vector3Position);
-
-      return markerMesh;
-    }
-  }
-
-  // Place Marker
-  let placeMarker = function(object, options) {
-    let position = markerProto.latLongToVector3(options.latitude, options.longitude, options.radius, options.height);
-    let marker = markerProto.marker(options.size, options.color, position);
-    object.add(marker);
-  }
-
-  // Place Marker At Address
-  let placeMarkerAtAddress = function(address, color) {
-    let encodedLocation = address.replace(/\s/g, '+');
-    let httpRequest = new XMLHttpRequest();
-
-    httpRequest.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodedLocation);
-    httpRequest.send(null);
-    httpRequest.onreadystatechange = function() {
-      if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-        let result = JSON.parse(httpRequest.responseText);
-
-        if (result.results.length > 0) {
-          let latitude = result.results[0].geometry.location.lat;
-          let longitude = result.results[0].geometry.location.lng;
-
-          placeMarker(earth.getObjectByName('surface'),{
-            latitude: latitude,
-            longitude: longitude,
-            radius: 0.5,
-            height: 0,
-            size: 0.01,
-            color: color,
-          });
-        }
-      }
-    };
-  }
 
   // Galaxy
   let galaxyGeometry = new THREE.SphereGeometry(100, 32, 32);
@@ -257,7 +199,7 @@ function start() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  camera.position.set(1,1,1);
+  camera.position.set(10,10,10);
   orbitControls.enabled = !cameraAutoRotation;
 
   scene.add(camera);
@@ -287,12 +229,12 @@ function start() {
 
     const textGeo = new THREE.TextGeometry( greetings, {
       font: font,
-      size: 0.2,
+      size: 0.15,
       height: 0.02,
       curveSegments: 5,
       bevelEnabled: true,
-      bevelThickness: 0.01,
-      bevelSize: 0.01,
+      bevelThickness: 0.005,
+      bevelSize: 0.001,
       bevelOffset: 0,
       bevelSegments: 0
     } );
@@ -300,20 +242,23 @@ function start() {
     const textMaterial = new THREE.MeshPhongMaterial( { color: 0xffeeee } );
 
     const mesh = new THREE.Mesh( textGeo, textMaterial );
-    mesh.position.set( -0.7, 0, 0.6 );
+    mesh.position.set( -0.6, 0, 0.5 );
 
     scene.add( mesh );
   } );
 
+  console.log(camera)
+
   // Main render function
   let render = function() {
-    earth.getObjectByName('surface').rotation.y += 1/32 * 0.01;
-    earth.getObjectByName('atmosphere').rotation.y += 1/16 * 0.01;
+    earth.getObjectByName('surface').rotation.y -= 1/10 * 0.01;
+    earth.getObjectByName('atmosphere').rotation.y -= 1/5 * 0.01;
     if (cameraAutoRotation) {
       cameraRotation += cameraRotationSpeed;
       camera.position.y = 0;
-      camera.position.x = 2 * Math.sin(cameraRotation);
-      camera.position.z = 2 * Math.cos(cameraRotation);
+      camera.position.x = -1 * Math.sin(cameraRotation);
+      camera.position.z = -5 * Math.cos(cameraRotation);
+      camera.zoom = camera.zoom++
       camera.lookAt(earth.position);
     }
     requestAnimationFrame(render);
