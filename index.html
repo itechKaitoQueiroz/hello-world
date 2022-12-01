@@ -6,22 +6,25 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<!--
-Wait a bit for the textures to load!
+  <div id="button" class="container">
+    <button onclick="start()">Start</button>
+  </div>
+  <!-- partial:index.partial.html -->
+  <!--
+  Wait a bit for the textures to load!
 
-You can also place a marker on the globe!
+  You can also place a marker on the globe!
 
-Go to Surface > Markers, type in an address into the field, pick your colour and click placeMarker. This uses Google's Geocode API to get the longitude and latitude of the address and that is then coverted to Vector3 coordinate relative to the Earth's surface.
--->
-<!-- partial -->
-<script src='//cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>
-<script src='//s3-us-west-2.amazonaws.com/s.cdpn.io/141228/OrbitControls.js'></script>
-<script src='//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.min.js'></script>
-<script src="./script.js"></script>
-<audio controls autoplay>
-  <source src="https://www.televisiontunes.com/uploads/audio/Universal%20Studios.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
+  Go to Surface > Markers, type in an address into the field, pick your colour and click placeMarker. This uses Google's Geocode API to get the longitude and latitude of the address and that is then coverted to Vector3 coordinate relative to the Earth's surface.
+  -->
+  <!-- partial -->
+  <script src='//cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>
+  <script src='//s3-us-west-2.amazonaws.com/s.cdpn.io/141228/OrbitControls.js'></script>
+  <script src='//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5.1/dat.gui.min.js'></script>
+  <script src="./script.js"></script>
+  <audio id="audio" controls style="display: none;">
+    <source src="audio/universal.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 </body>
 </html>

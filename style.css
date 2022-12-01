@@ -5,3 +5,9 @@ body {
 canvas {
   display: block;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
